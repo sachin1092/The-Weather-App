@@ -1,0 +1,117 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/personDetailScrollView"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:fontFamily="sans-serif-light"
+            android:text="Location Name"
+            android:textColor="#ff707070"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/textLocationName"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="Location Name"
+            android:inputType="textPersonName"
+            android:textColor="#ff222222"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:fontFamily="sans-serif-light"
+            android:text="Is my location?"
+            android:textColor="#ff707070"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/textIsMyLocation"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="Is my location?"
+            android:inputType="number"
+            android:textColor="#ff222222"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:fontFamily="sans-serif-light"
+            android:text="GMT"
+            android:textColor="#ff707070"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/textgmt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="GMT"
+            android:inputType="text"
+            android:textColor="#ff222222"
+            android:textSize="20sp" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:fontFamily="sans-serif-light"
+            android:text="Latitude"
+            android:textColor="#ff707070"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/textlat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="latitude"
+            android:inputType="text"
+            android:textColor="#ff222222"
+            android:textSize="20sp" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:fontFamily="sans-serif-light"
+            android:text="Longitude"
+            android:textColor="#ff707070"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/textlon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="longitude"
+            android:inputType="text"
+            android:textColor="#ff222222"
+            android:textSize="20sp" />
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Update"
+            android:id="@+id/bUpdate"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delete"
+            android:id="@+id/bDelete"/>
+    </LinearLayout>
+
+</ScrollView>
