@@ -1,6 +1,9 @@
 package com.sachinshinde.theweatherapp.ui.main.fragments;
 
 import android.app.Activity;
+import android.content.Context;
+import android.location.Location;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
@@ -8,15 +11,24 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sachinshinde.theweatherapp.R;
+import com.sachinshinde.theweatherapp.db.LocationDBHandler;
 import com.sachinshinde.theweatherapp.db.Locations;
 import com.sachinshinde.theweatherapp.db.LocationsProvider;
+import com.sachinshinde.theweatherapp.libs.SwipeDismissRecyclerViewTouchListener;
+import com.sachinshinde.theweatherapp.ui.main.adapters.CursorRecyclerViewAdapter;
 
 
 /**
@@ -28,7 +40,7 @@ import com.sachinshinde.theweatherapp.db.LocationsProvider;
  * Activities containing this fragment MUST implement the {@link Callbacks}
  * interface.
  */
-public class LocationListFragment extends ListFragment {
+public class LocationListFragment extends Fragment {
 
 	/**
      * The serialization (saved instance state) Bundle key representing the
@@ -80,38 +92,126 @@ public class LocationListFragment extends ListFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setListAdapter(new SimpleCursorAdapter(getActivity(),
-				R.layout.location_listitem, null, new String[] {
-						Locations.KEY_NAME, Locations.KEY_IS_MY_LOC,
-						Locations.KEY_GMT, Locations.KEY_LAT, Locations.KEY_LON }, new int[] { R.id.cardLocationName,
-						R.id.cardIsMyLocation, R.id.cardGMT, R.id.cardLat, R.id.cardLon}, 0));
+//		setListAdapter(new SimpleCursorAdapter(getActivity(),
+//				R.layout.location_listitem, null, new String[] {
+//						Locations.KEY_NAME, Locations.KEY_IS_MY_LOC,
+//						Locations.KEY_GMT, Locations.KEY_LAT, Locations.KEY_LON }, new int[] { R.id.cardLocationName,
+//						R.id.cardIsMyLocation, R.id.cardGMT, R.id.cardLat, R.id.cardLon}, 0));
 
-		// Load the content
-		getLoaderManager().initLoader(0, null, new LoaderCallbacks<Cursor>() {
-			@Override
-			public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-				return new CursorLoader(getActivity(),
-						LocationsProvider.URI_LOCATIONS, Locations.FIELDS, null, null,
-						null);
-			}
 
-			@Override
-			public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
-				((SimpleCursorAdapter) getListAdapter()).swapCursor(c);
-			}
-
-			@Override
-			public void onLoaderReset(Loader<Cursor> arg0) {
-				((SimpleCursorAdapter) getListAdapter()).swapCursor(null);
-			}
-		});
 	}
+
+    private RecyclerView mRecyclerView;
+    private RecyclerView.LayoutManager mLayoutManager;
+//    private RecyclerView.Adapter<CustomViewHolder> mAdapter;
+    CursorRecyclerViewAdapter<CustomViewHolder> mAdapter;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_location_list, null);
+        View view = inflater.inflate(R.layout.fragment_location_list, null);
+
+        mRecyclerView = (RecyclerView)view.findViewById(R.id.rvMain);
+        mLayoutManager = new GridLayoutManager(getActivity(), 2);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        mAdapter = new CursorRecyclerViewAdapter<CustomViewHolder>(getActivity(), null) {
+            @Override
+            public void onBindViewHolder(CustomViewHolder viewHolder, Cursor cursor) {
+//                cursor.moveToFirst();
+                Locations item = new Locations(cursor);
+                viewHolder.location_name.setText(item.city_name);
+                viewHolder.is_my_loc.setText(item.is_my_loc);
+                viewHolder.gmt.setText(item.gmt);
+                viewHolder.lat.setText(item.lat);
+                viewHolder.lon.setText(item.lon);
+            }
+
+            @Override
+            public CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+                View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.location_listitem
+                        , viewGroup, false);
+                return new CustomViewHolder(view);
+            }
+        };
+
+        // Load the content
+        getLoaderManager().initLoader(0, null, new LoaderCallbacks<Cursor>() {
+            @Override
+            public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+                return new CursorLoader(getActivity(),
+                        LocationsProvider.URI_LOCATIONS, Locations.FIELDS, null, null,
+                        null);
+            }
+
+            @Override
+            public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
+                mAdapter.swapCursor(c);
+            }
+
+            @Override
+            public void onLoaderReset(Loader<Cursor> arg0) {
+                mAdapter.swapCursor(null);
+            }
+        });
+
+        mRecyclerView.setAdapter(mAdapter);
+
+        SwipeDismissRecyclerViewTouchListener touchListener =
+                new SwipeDismissRecyclerViewTouchListener(
+                        mRecyclerView,
+                        new SwipeDismissRecyclerViewTouchListener.DismissCallbacks() {
+                            @Override
+                            public boolean canDismiss(int position) {
+                                return true;
+                            }
+
+                            @Override
+                            public void onDismiss(RecyclerView recyclerView, int[] reverseSortedPositions) {
+                                for (int position : reverseSortedPositions) {
+//                                    mLayoutManager.removeView(mLayoutManager.getChildAt(position));
+//                                    items.remove(position);
+                                    Cursor cursor = mAdapter.getCursor();
+                                    cursor.moveToPosition(position);
+                                    LocationDBHandler.getInstance(getActivity()).removeLocation(new Locations(cursor));
+                                    mAdapter.notifyItemRemoved(position);
+                                }
+                                mAdapter.notifyDataSetChanged();
+                            }
+                        });
+        mRecyclerView.setOnTouchListener(touchListener);
+        // Setting this scroll listener is required to ensure that during ListView scrolling,
+        // we don't look for swipes.
+        mRecyclerView.setOnScrollListener(touchListener.makeScrollListener());
+        mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(),
+                new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Toast.makeText(getActivity(), "Clicked ", Toast.LENGTH_SHORT).show();
+                        mCallbacks.onItemSelected(mAdapter.getItemId(position));
+                    }
+                }));
+
+        return view;
 	}
+
+    private class CustomViewHolder extends RecyclerView.ViewHolder {
+
+        private TextView location_name;
+        private TextView is_my_loc;
+        private TextView gmt;
+        private TextView lat;
+        private TextView lon;
+
+        public CustomViewHolder(View itemView) {
+            super(itemView);
+            this.location_name = (TextView) itemView.findViewById(R.id.cardLocationName);
+            this.is_my_loc = (TextView) itemView.findViewById(R.id.cardIsMyLocation);
+            this.gmt = (TextView) itemView.findViewById(R.id.cardGMT);
+            this.lat = (TextView) itemView.findViewById(R.id.cardLat);
+            this.lon = (TextView) itemView.findViewById(R.id.cardLon);
+        }
+    }
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -122,8 +222,8 @@ public class LocationListFragment extends ListFragment {
 				&& savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
             Log.d("TheWeatherApp", "restoring " + savedInstanceState
                     .getInt(STATE_ACTIVATED_POSITION));
-            setActivatedPosition(savedInstanceState
-					.getInt(STATE_ACTIVATED_POSITION));
+//            setActivatedPosition(savedInstanceState
+//					.getInt(STATE_ACTIVATED_POSITION));
 		}
 	}
 
@@ -148,15 +248,15 @@ public class LocationListFragment extends ListFragment {
 		mCallbacks = sDummyCallbacks;
 	}
 
-	@Override
-	public void onListItemClick(ListView listView, View view, int position,
-			long id) {
-		super.onListItemClick(listView, view, position, id);
-
-		// Notify the active callbacks interface (the activity, if the
-		// fragment is attached to one) that an item has been selected.
-		mCallbacks.onItemSelected(getListAdapter().getItemId(position));
-	}
+//	@Override
+//	public void onListItemClick(ListView listView, View view, int position,
+//			long id) {
+//		super.onListItemClick(listView, view, position, id);
+//
+//		// Notify the active callbacks interface (the activity, if the
+//		// fragment is attached to one) that an item has been selected.
+//		mCallbacks.onItemSelected(getListAdapter().getItemId(position));
+//	}
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
@@ -167,37 +267,58 @@ public class LocationListFragment extends ListFragment {
 		}
 	}
 
-	/**
-	 * Turns on activate-on-click mode. When this mode is on, list items will be
-	 * given the 'activated' state when touched.
-	 */
-	public void setActivateOnItemClick(boolean activateOnItemClick) {
-		// When setting CHOICE_MODE_SINGLE, ListView will automatically
-		// give items the 'activated' state when touched.
-		getListView().setChoiceMode(
-				activateOnItemClick ? ListView.CHOICE_MODE_SINGLE
-						: ListView.CHOICE_MODE_NONE);
-	}
+//	/**
+//	 * Turns on activate-on-click mode. When this mode is on, list items will be
+//	 * given the 'activated' state when touched.
+//	 */
+//	public void setActivateOnItemClick(boolean activateOnItemClick) {
+//		// When setting CHOICE_MODE_SINGLE, ListView will automatically
+//		// give items the 'activated' state when touched.
+////		mRecyclerView.setChoiceMode(
+////				activateOnItemClick ? ListView.CHOICE_MODE_SINGLE
+////						: ListView.CHOICE_MODE_NONE);
+//	}
+//
+//	private void setActivatedPosition(int position) {
+////		if (position == ListView.INVALID_POSITION) {
+////			getListView().setItemChecked(mActivatedPosition, false);
+////		} else {
+////			getListView().setItemChecked(position, true);
+////		}
+//
+//		mActivatedPosition = position;
+//	}
 
-	private void setActivatedPosition(int position) {
-		if (position == ListView.INVALID_POSITION) {
-			getListView().setItemChecked(mActivatedPosition, false);
-		} else {
-			getListView().setItemChecked(position, true);
-		}
-
-		mActivatedPosition = position;
-	}
-
-    @Override
-    public void onResume() {
-        Log.d("TheWeatherApp", "Resuming list fragment");
-        super.onResume();
+    public interface OnItemClickListener {
+        public void onItemClick(View view, int position);
     }
 
-    @Override
-    public void onPause() {
-        Log.d("TheWeatherApp", "Pausing list fragment");
-        super.onPause();
+    public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
+        private OnItemClickListener mListener;
+
+        GestureDetector mGestureDetector;
+
+        public RecyclerItemClickListener(Context context, OnItemClickListener listener) {
+            mListener = listener;
+            mGestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+                @Override
+                public boolean onSingleTapUp(MotionEvent e) {
+                    return true;
+                }
+            });
+        }
+
+        @Override
+        public boolean onInterceptTouchEvent(RecyclerView view, MotionEvent e) {
+            View childView = view.findChildViewUnder(e.getX(), e.getY());
+            if (childView != null && mListener != null && mGestureDetector.onTouchEvent(e)) {
+                mListener.onItemClick(childView, view.getChildPosition(childView));
+            }
+            return false;
+        }
+
+        @Override
+        public void onTouchEvent(RecyclerView view, MotionEvent motionEvent) {
+        }
     }
 }
