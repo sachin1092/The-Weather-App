@@ -85,13 +85,13 @@ public class LocationListActivity extends FragmentActivity implements
 	}
 
 
-	@Override
+	/*@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.menu_main, menu);
 		return true;
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		boolean result = false;
@@ -102,8 +102,10 @@ public class LocationListActivity extends FragmentActivity implements
 			LocationDBHandler.getInstance(this).putLocation(p);
 			// Open a new fragment with the new id
 			onItemSelected(p.id);
-		}
-		
+		} else if (R.id.action_remove == item.getItemId()){
+
+        }
+
 		return result;
-	}
+	}*/
 }

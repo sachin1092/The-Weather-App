@@ -11,11 +11,15 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,6 +96,8 @@ public class LocationListFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+        setHasOptionsMenu(true);
+
 //		setListAdapter(new SimpleCursorAdapter(getActivity(),
 //				R.layout.location_listitem, null, new String[] {
 //						Locations.KEY_NAME, Locations.KEY_IS_MY_LOC,
@@ -114,6 +120,8 @@ public class LocationListFragment extends Fragment {
         mRecyclerView = (RecyclerView)view.findViewById(R.id.rvMain);
         mLayoutManager = new GridLayoutManager(getActivity(), 2);
         mRecyclerView.setLayoutManager(mLayoutManager);
+
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         mAdapter = new CursorRecyclerViewAdapter<CustomViewHolder>(getActivity(), null) {
             @Override
@@ -139,6 +147,7 @@ public class LocationListFragment extends Fragment {
         getLoaderManager().initLoader(0, null, new LoaderCallbacks<Cursor>() {
             @Override
             public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+                Log.d("TheWeatherApp", "onCreateLoader");
                 return new CursorLoader(getActivity(),
                         LocationsProvider.URI_LOCATIONS, Locations.FIELDS, null, null,
                         null);
@@ -146,11 +155,13 @@ public class LocationListFragment extends Fragment {
 
             @Override
             public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
+                Log.d("TheWeatherApp", "onLoaderFinished");
                 mAdapter.swapCursor(c);
             }
 
             @Override
             public void onLoaderReset(Loader<Cursor> arg0) {
+                Log.d("TheWeatherApp", "onLoaderReset");
                 mAdapter.swapCursor(null);
             }
         });
@@ -174,9 +185,9 @@ public class LocationListFragment extends Fragment {
                                     Cursor cursor = mAdapter.getCursor();
                                     cursor.moveToPosition(position);
                                     LocationDBHandler.getInstance(getActivity()).removeLocation(new Locations(cursor));
-                                    mAdapter.notifyItemRemoved(position);
+//                                    mAdapter.notifyItemRemoved(position);
                                 }
-                                mAdapter.notifyDataSetChanged();
+//                                mAdapter.notifyDataSetChanged();
                             }
                         });
         mRecyclerView.setOnTouchListener(touchListener);
@@ -319,6 +330,30 @@ public class LocationListFragment extends Fragment {
 
         @Override
         public void onTouchEvent(RecyclerView view, MotionEvent motionEvent) {
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_main, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.newLocation:
+//                result = true;
+                // Create a new person.
+                Locations p = new Locations("","","","","", -1);
+                LocationDBHandler.getInstance(getActivity()).putLocation(p);
+                // Open a new fragment with the new id
+//                onItemSelected(p.id);
+                return true;
+            case R.id.action_remove:
+//                mAdapter.removeItem();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }

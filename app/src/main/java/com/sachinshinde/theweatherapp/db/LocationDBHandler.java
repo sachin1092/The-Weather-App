@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.ArrayList;
+
 /**
  * Created by sachin on 28/12/14.
  */
@@ -75,6 +77,30 @@ public class LocationDBHandler extends SQLiteOpenHelper {
         cursor.close();
 
         return item;
+    }
+
+    public synchronized ArrayList<Locations> getLocations() {
+        final SQLiteDatabase db = this.getReadableDatabase();
+        final Cursor cursor = db.query(Locations.TABLE_NAME,
+                Locations.FIELDS, null,
+                null, null, null, null, null);
+        if (cursor == null || cursor.isAfterLast()) {
+            return null;
+        }
+
+        ArrayList<Locations> list = new ArrayList<Locations>();
+
+        Locations item = null;
+        cursor.moveToFirst();
+        for(int i = 0 ; i < cursor.getCount() ; i++) {
+            item = new Locations(cursor);
+            cursor.moveToNext();
+            list.add(item);
+        }
+
+        cursor.close();
+
+        return list;
     }
 
 

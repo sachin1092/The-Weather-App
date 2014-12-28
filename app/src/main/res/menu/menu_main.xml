@@ -8,4 +8,8 @@
         app:showAsAction="ifRoom|withText"
         android:title="New"/>
 
+    <item android:id="@+id/action_remove"
+        android:title="Remove"
+        app:showAsAction="ifRoom|withText" />
+
 </menu>

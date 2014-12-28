@@ -4,8 +4,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
- 
+
 public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
  
     private Context mContext;
@@ -66,6 +67,13 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
         }
         onBindViewHolder(viewHolder, mCursor);
     }
+
+//    public void removeItem() {
+//        if (mItems.isEmpty()) return;
+//
+//        mItems.remove(0);
+//        notifyItemRemoved(0);
+//    }
  
     /**
      * Change the underlying cursor to a new cursor. If there is an existing cursor it will be
@@ -85,8 +93,12 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
      */
     public Cursor swapCursor(Cursor newCursor) {
         if (newCursor == mCursor) {
+            Log.d("TheWeatherApp", "returning null in swapcusrsor");
             return null;
         }
+        Log.d("TheWeatherApp", "returning cursor notifyitemremoved is called now oldcursor " + (mCursor != null? mCursor.getCount() : 0) + " newcursor " + (newCursor != null? newCursor.getCount() : 0));
+//        notifyItemRemoved(0);
+
         final Cursor oldCursor = mCursor;
         if (oldCursor != null && mDataSetObserver != null) {
             oldCursor.unregisterDataSetObserver(mDataSetObserver);
@@ -99,9 +111,12 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
             mRowIdColumn = newCursor.getColumnIndexOrThrow("_id");
             mDataValid = true;
             notifyDataSetChanged();
+//            notifyItemRemoved(0);
         } else {
             mRowIdColumn = -1;
             mDataValid = false;
+//            notifyItemRemoved(0);
+
             notifyDataSetChanged();
             //There is no notifyDataSetInvalidated() method in RecyclerView.Adapter
         }
@@ -120,6 +135,7 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
         public void onInvalidated() {
             super.onInvalidated();
             mDataValid = false;
+            Log.d("TheWeatherApp", "onIvalidated");
             notifyDataSetChanged();
             //There is no notifyDataSetInvalidated() method in RecyclerView.Adapter
         }
