@@ -34,6 +34,8 @@ import com.sachinshinde.theweatherapp.db.LocationsProvider;
 import com.sachinshinde.theweatherapp.libs.SwipeDismissRecyclerViewTouchListener;
 import com.sachinshinde.theweatherapp.ui.main.adapters.CursorRecyclerViewAdapter;
 
+import java.util.List;
+
 
 /**
  * A list fragment representing a list of Persons. This fragment also supports
@@ -110,7 +112,8 @@ public class LocationListFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
 //    private RecyclerView.Adapter<CustomViewHolder> mAdapter;
-    CursorRecyclerViewAdapter<CustomViewHolder> mAdapter;
+    RecyclerView.Adapter mAdapter;
+    private List<Locations> mItems;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -123,17 +126,9 @@ public class LocationListFragment extends Fragment {
 
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        mAdapter = new CursorRecyclerViewAdapter<CustomViewHolder>(getActivity(), null) {
-            @Override
-            public void onBindViewHolder(CustomViewHolder viewHolder, Cursor cursor) {
-//                cursor.moveToFirst();
-                Locations item = new Locations(cursor);
-                viewHolder.location_name.setText(item.city_name);
-                viewHolder.is_my_loc.setText(item.is_my_loc);
-                viewHolder.gmt.setText(item.gmt);
-                viewHolder.lat.setText(item.lat);
-                viewHolder.lon.setText(item.lon);
-            }
+        mItems = LocationDBHandler.getInstance(getActivity()).getLocations();
+
+        mAdapter = new RecyclerView.Adapter<CustomViewHolder>() {
 
             @Override
             public CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
@@ -141,30 +136,49 @@ public class LocationListFragment extends Fragment {
                         , viewGroup, false);
                 return new CustomViewHolder(view);
             }
+
+            @Override
+            public void onBindViewHolder(CustomViewHolder viewHolder, int position) {
+                viewHolder.location_name.setText(mItems.get(position).city_name);
+                viewHolder.is_my_loc.setText(mItems.get(position).is_my_loc);
+                viewHolder.gmt.setText(mItems.get(position).gmt);
+                viewHolder.lat.setText(mItems.get(position).lat);
+                viewHolder.lon.setText(mItems.get(position).lon);
+            }
+
+            @Override
+            public long getItemId(int position) {
+                return mItems.get(position).id;
+            }
+
+            @Override
+            public int getItemCount() {
+                return mItems.size();
+            }
         };
 
         // Load the content
-        getLoaderManager().initLoader(0, null, new LoaderCallbacks<Cursor>() {
-            @Override
-            public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-                Log.d("TheWeatherApp", "onCreateLoader");
-                return new CursorLoader(getActivity(),
-                        LocationsProvider.URI_LOCATIONS, Locations.FIELDS, null, null,
-                        null);
-            }
-
-            @Override
-            public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
-                Log.d("TheWeatherApp", "onLoaderFinished");
-                mAdapter.swapCursor(c);
-            }
-
-            @Override
-            public void onLoaderReset(Loader<Cursor> arg0) {
-                Log.d("TheWeatherApp", "onLoaderReset");
-                mAdapter.swapCursor(null);
-            }
-        });
+//        getLoaderManager().initLoader(0, null, new LoaderCallbacks<Cursor>() {
+//            @Override
+//            public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+//                Log.d("TheWeatherApp", "onCreateLoader");
+//                return new CursorLoader(getActivity(),
+//                        LocationsProvider.URI_LOCATIONS, Locations.FIELDS, null, null,
+//                        null);
+//            }
+//
+//            @Override
+//            public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
+//                Log.d("TheWeatherApp", "onLoaderFinished");
+//                mAdapter.swapCursor(c);
+//            }
+//
+//            @Override
+//            public void onLoaderReset(Loader<Cursor> arg0) {
+//                Log.d("TheWeatherApp", "onLoaderReset");
+//                mAdapter.swapCursor(null);
+//            }
+//        });
 
         mRecyclerView.setAdapter(mAdapter);
 
@@ -180,12 +194,11 @@ public class LocationListFragment extends Fragment {
                             @Override
                             public void onDismiss(RecyclerView recyclerView, int[] reverseSortedPositions) {
                                 for (int position : reverseSortedPositions) {
-//                                    mLayoutManager.removeView(mLayoutManager.getChildAt(position));
-//                                    items.remove(position);
-                                    Cursor cursor = mAdapter.getCursor();
-                                    cursor.moveToPosition(position);
-                                    LocationDBHandler.getInstance(getActivity()).removeLocation(new Locations(cursor));
-//                                    mAdapter.notifyItemRemoved(position);
+                                    mLayoutManager.removeView(mLayoutManager.getChildAt(position));
+                                    mItems.remove(position);
+                                    mAdapter.notifyItemRemoved(position);
+                                    LocationDBHandler.getInstance(getActivity()).removeLocation(mItems.get(position));
+
                                 }
 //                                mAdapter.notifyDataSetChanged();
                             }
