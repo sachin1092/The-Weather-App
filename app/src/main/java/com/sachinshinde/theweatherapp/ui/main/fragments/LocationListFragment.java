@@ -2,12 +2,17 @@ package com.sachinshinde.theweatherapp.ui.main.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,10 +25,14 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.AnimatorInflater;
 import com.sachinshinde.theweatherapp.R;
 import com.sachinshinde.theweatherapp.db.LocationDBHandler;
 import com.sachinshinde.theweatherapp.db.Locations;
@@ -32,6 +41,9 @@ import com.sachinshinde.theweatherapp.libs.SwipeDismissRecyclerViewTouchListener
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.sachinshinde.theweatherapp.utils.LogUtils.LOGD;
+import static com.sachinshinde.theweatherapp.utils.LogUtils.makeLogTag;
 
 
 /**
@@ -44,6 +56,38 @@ import java.util.List;
  * interface.
  */
 public class LocationListFragment extends Fragment {
+
+    private static final String TAG = makeLogTag(LocationListFragment.class);
+    private static final int ANIM_DURATION = 250;
+    private static final long ANIMATION_DURATION = 500;
+    private Context mAppContext;
+//    private RecyclerView mCollectionView;
+    private TextView mEmptyView;
+    private View mLoadingView;
+    private boolean mWasPaused = false;
+    private Bundle mArguments;
+    private int mDefaultSessionColor;
+    int itemCount = 0;
+
+    public boolean canCollectionViewScrollUp() {
+        return ViewCompat.canScrollVertically(mRecyclerView, -1);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mWasPaused = true;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mWasPaused) {
+            mWasPaused = false;
+            LOGD(TAG, "Reloading data as a result of onResume()");
+//            reloadSessionData(false);
+        }
+    }
 
 	/**
      * The serialization (saved instance state) Bundle key representing the
@@ -98,6 +142,8 @@ public class LocationListFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
+        mDefaultSessionColor = getResources().getColor(R.color.default_session_color);
+
 //		setListAdapter(new SimpleCursorAdapter(getActivity(),
 //				R.layout.location_listitem, null, new String[] {
 //						Locations.KEY_NAME, Locations.KEY_IS_MY_LOC,
@@ -107,18 +153,41 @@ public class LocationListFragment extends Fragment {
 
 	}
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mAppContext = getActivity().getApplicationContext();
+    }
+
+    Animator grow, shrink;
+
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
 //    private RecyclerView.Adapter<CustomViewHolder> mAdapter;
     RecyclerView.Adapter mAdapter;
     private List<Locations> mItems;
 
+    ViewGroup root;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_location_list, null);
-
-        mRecyclerView = (RecyclerView)view.findViewById(R.id.rvMain);
+        root = (ViewGroup) inflater.inflate(R.layout.fragment_locations, container, false);
+        mEmptyView = (TextView) root.findViewById(R.id.empty_text);
+        mLoadingView = root.findViewById(R.id.loading);
+//        ((ImageButton)root.findViewById(R.id.ibAddLocation)).setColorFilter(getResources().getColor(R.color.theme_primary));
+        setupAnimation();
+//        root.findViewById(R.id.ibAddLocation).setVisibility(View.GONE);
+        root.findViewById(R.id.ibAddLocation).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                View mView = root.findViewById(R.id.ibAddLocation);
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeScaleUpAnimation(mView, (int) mView.getX() + mView.getWidth() / 2, (int) mView.getY() + mView.getHeight() / 2, mView.getWidth(), mView.getHeight());
+//                Intent intent = new Intent(getActivity(), Suggest.class);
+//                ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+            }
+        });
+        mRecyclerView = (RecyclerView)root.findViewById(R.id.rvMain);
         mLayoutManager = new GridLayoutManager(getActivity(), 2);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
@@ -229,8 +298,168 @@ public class LocationListFragment extends Fragment {
                     }
                 }));
 
-        return view;
+        return root;
 	}
+
+    private void setupAnimation() {
+        grow = AnimatorInflater.loadAnimator(getActivity(), R.anim.noa_grow);
+        grow.setDuration(ANIMATION_DURATION);
+        grow.addListener(new Animator.AnimatorListener() {
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+                root.findViewById(R.id.ibAddLocation).setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                // Do nothing.
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                // Do nothing.
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+                // Do nothing.
+            }
+        });
+        grow.setTarget(root.findViewById(R.id.ibAddLocation));
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                grow.start();
+            }
+        }, 500);
+
+        shrink = AnimatorInflater.loadAnimator(getActivity(), R.anim.noa_shrink);
+        shrink.setDuration(ANIMATION_DURATION);
+        shrink.addListener(new Animator.AnimatorListener() {
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                // Do nothing.
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                root.findViewById(R.id.ibAddLocation).setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+                // Do nothing.
+            }
+        });
+
+        shrink.setTarget(root.findViewById(R.id.ibAddLocation));
+
+        mActionBarAutoHideMinY = getResources().getDimensionPixelSize(
+                R.dimen.fab_auto_hide_min_y);
+        mActionBarAutoHideSensivity = getResources().getDimensionPixelSize(
+                R.dimen.fab_auto_hide_sensivity);
+
+//        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+//
+//            final static int ITEMS_THRESHOLD = 1;
+//            int lastFvi = 0;
+//
+//            @Override
+//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+//                super.onScrollStateChanged(recyclerView, newState);
+//            }
+//
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+////                super.onScrolled(recyclerView, dx, dy);
+//                onMainContentScrolled(firstVisibleItem <= ITEMS_THRESHOLD ? 0 : Integer.MAX_VALUE,
+//                        lastFvi - firstVisibleItem > 0 ? Integer.MIN_VALUE :
+//                                lastFvi == firstVisibleItem ? 0 : Integer.MAX_VALUE
+//                );
+//                lastFvi = firstVisibleItem;
+//            }
+//
+//            //            @Override
+////            public void onScrollStateChanged(AbsListView absListView, int i) {
+////
+////            }
+////
+////            @Override
+////            public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//////                com.sachinshinde.theweatherapp.util.Log.d(firstVisibleItem, visibleItemCount, totalItemCount);
+////
+////                onMainContentScrolled(firstVisibleItem <= ITEMS_THRESHOLD ? 0 : Integer.MAX_VALUE,
+////                        lastFvi - firstVisibleItem > 0 ? Integer.MIN_VALUE :
+////                                lastFvi == firstVisibleItem ? 0 : Integer.MAX_VALUE
+////                );
+////                lastFvi = firstVisibleItem;
+////
+////
+////            }
+//        });
+
+    }
+
+    private int mActionBarAutoHideSensivity = 0;
+    private int mActionBarAutoHideMinY = 0;
+    private int mActionBarAutoHideSignal = 0;
+
+    private void onMainContentScrolled(int currentY, int deltaY) {
+        if (deltaY > mActionBarAutoHideSensivity) {
+            deltaY = mActionBarAutoHideSensivity;
+        } else if (deltaY < -mActionBarAutoHideSensivity) {
+            deltaY = -mActionBarAutoHideSensivity;
+        }
+
+        if (Math.signum(deltaY) * Math.signum(mActionBarAutoHideSignal) < 0) {
+            // deltaY is a motion opposite to the accumulated signal, so reset signal
+            mActionBarAutoHideSignal = deltaY;
+        } else {
+            // add to accumulated signal
+            mActionBarAutoHideSignal += deltaY;
+        }
+
+
+
+        boolean shouldShow = currentY < mActionBarAutoHideMinY ||
+                (mActionBarAutoHideSignal <= -mActionBarAutoHideSensivity);
+
+//        com.sachinshinde.theweatherapp.util.Log.d(shouldShow);
+        if (!shouldShow) {
+            if (root.findViewById(R.id.ibAddLocation).getVisibility() == View.VISIBLE)
+                if (!shrink.isRunning())
+                    shrink.start();
+        } else {
+            if (root.findViewById(R.id.ibAddLocation).getVisibility() == View.GONE)
+                if (!grow.isRunning())
+                    grow.start();
+        }
+    }
+
+    public Context getBaseContext() {
+        return mAppContext;
+    }
+
+    private void hideEmptyView() {
+        mEmptyView.setVisibility(View.GONE);
+        mLoadingView.setVisibility(View.GONE);
+    }
+
+    private void showEmptyView() {
+
+        // Showing sessions as a result of search or filter, so say "No matching sessions."
+        mEmptyView.setText("No Cities");
+        mEmptyView.setVisibility(View.VISIBLE);
+        mLoadingView.setVisibility(View.GONE);
+    }
+//
 
     private class CustomViewHolder extends RecyclerView.ViewHolder {
 
@@ -382,4 +611,13 @@ public class LocationListFragment extends Fragment {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    public void animateReload() {
+        //int curTop = mCollectionView.getTop();
+        mRecyclerView.setAlpha(0);
+        //mCollectionView.setTop(getResources().getDimensionPixelSize(R.dimen.browse_sessions_anim_amount));
+        //mCollectionView.animate().y(curTop).alpha(1).setDuration(ANIM_DURATION).setInterpolator(new DecelerateInterpolator());
+        mRecyclerView.animate().alpha(1).setDuration(ANIM_DURATION).setInterpolator(new DecelerateInterpolator());
+    }
+
 }

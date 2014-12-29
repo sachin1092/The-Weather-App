@@ -5,13 +5,39 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.sachinshinde.theweatherapp.R;
+import com.sachinshinde.theweatherapp.ui.main.fragments.LocationDetailFragment;
 import com.sachinshinde.theweatherapp.ui.main.fragments.LocationListFragment;
 import com.sachinshinde.theweatherapp.ui.main.views.DrawShadowFrameLayout;
 
 
-public class AllCities extends BaseActivity /*implements
-        MultiSwipeRefreshLayout.CanChildScrollUpCallback*/ {
+public class AllCities extends BaseActivity implements
+        LocationListFragment.Callbacks  {
 
+    /**
+     * Callback method from {@link com.sachinshinde.theweatherapp.ui.main.fragments.LocationListFragment.Callbacks} indicating that
+     * the item with the given ID was selected.
+     */
+    @Override
+    public void onItemSelected(long id) {
+//		if (mTwoPane) {
+//			// In two-pane mode, show the detail view in this activity by
+//			// adding or replacing the detail fragment using a
+//			// fragment transaction.
+//			Bundle arguments = new Bundle();
+//			arguments.putLong(LocationDetailFragment.ARG_ITEM_ID, id);
+//			LocationDetailFragment fragment = new LocationDetailFragment();
+//			fragment.setArguments(arguments);
+//			getSupportFragmentManager().beginTransaction()
+//					.replace(R.id.person_detail_container, fragment).commit();
+//
+//		} else {
+        // In single-pane mode, simply start the detail activity
+        // for the selected item ID.
+        Intent detailIntent = new Intent(this, LocationDetailActivity.class);
+        detailIntent.putExtra(LocationDetailFragment.ARG_ITEM_ID, id);
+        startActivity(detailIntent);
+//		}
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +63,7 @@ public class AllCities extends BaseActivity /*implements
 //        }
 
 
-        mLocationsFrag = (LocationListFragment) getFragmentManager().findFragmentById(
+        mLocationsFrag = (LocationListFragment) getSupportFragmentManager().findFragmentById(
                 R.id.sessions_fragment);
         if (mLocationsFrag != null && savedInstanceState == null) {
             Bundle args = intentToFragmentArguments(getIntent());
