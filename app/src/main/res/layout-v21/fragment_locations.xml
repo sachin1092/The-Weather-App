@@ -14,7 +14,7 @@
   limitations under the License.
   -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:iosched="http://schemas.android.com/apk/res-auto"
+    xmlns:theweatherapp="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -26,7 +26,7 @@
         android:padding="@dimen/explore_grid_padding_half"
         android:clipToPadding="false"
         android:scrollbarStyle="outsideOverlay"/>
-        <!--iosched:internalPadding="@dimen/explore_grid_padding" />-->
+        <!--theweatherapp:internalPadding="@dimen/explore_grid_padding" />-->
 
     <ProgressBar
         android:id="@+id/loading"
@@ -55,7 +55,7 @@
         android:clickable="true"
         android:layout_gravity="bottom|end|right"
         android:padding="15dp"
-        android:layout_margin="10dp"
+        android:layout_margin="20dp"
         android:scaleType="fitCenter"
         android:src="@drawable/add_fab"
         android:id="@+id/ibAddLocation"

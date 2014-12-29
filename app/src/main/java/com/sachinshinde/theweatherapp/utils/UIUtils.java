@@ -72,7 +72,7 @@ public class UIUtils {
     private static final float SESSION_PHOTO_SCRIM_SATURATION = 0.2f; // 0=gray, 1=color image
 
     public static final String TARGET_FORM_FACTOR_ACTIVITY_METADATA =
-            "com.google.samples.apps.iosched.meta.TARGET_FORM_FACTOR";
+            "com.google.samples.apps.theweatherapp.meta.TARGET_FORM_FACTOR";
 
     public static final String TARGET_FORM_FACTOR_HANDSET = "handset";
     public static final String TARGET_FORM_FACTOR_TABLET = "tablet";
