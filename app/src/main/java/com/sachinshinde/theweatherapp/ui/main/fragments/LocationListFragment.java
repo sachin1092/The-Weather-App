@@ -2,15 +2,12 @@ package com.sachinshinde.theweatherapp.ui.main.fragments;
 
 import android.app.Activity;
 import android.content.Context;
-import android.location.Location;
+import android.database.Cursor;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SimpleCursorAdapter;
-import android.database.Cursor;
-import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,8 +29,8 @@ import com.sachinshinde.theweatherapp.db.LocationDBHandler;
 import com.sachinshinde.theweatherapp.db.Locations;
 import com.sachinshinde.theweatherapp.db.LocationsProvider;
 import com.sachinshinde.theweatherapp.libs.SwipeDismissRecyclerViewTouchListener;
-import com.sachinshinde.theweatherapp.ui.main.adapters.CursorRecyclerViewAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -64,8 +61,9 @@ public class LocationListFragment extends Fragment {
 	 * The current activated item position. Only used on tablets.
 	 */
 	private int mActivatedPosition = ListView.INVALID_POSITION;
+    private boolean should_update = true;
 
-	/**
+    /**
 	 * A callback interface that all activities containing this fragment must
 	 * implement. This mechanism allows activities to be notified of item
 	 * selections.
@@ -126,7 +124,7 @@ public class LocationListFragment extends Fragment {
 
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        mItems = LocationDBHandler.getInstance(getActivity()).getLocations();
+        mItems = new ArrayList<>();
 
         mAdapter = new RecyclerView.Adapter<CustomViewHolder>() {
 
@@ -157,28 +155,42 @@ public class LocationListFragment extends Fragment {
             }
         };
 
-        // Load the content
-//        getLoaderManager().initLoader(0, null, new LoaderCallbacks<Cursor>() {
-//            @Override
-//            public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-//                Log.d("TheWeatherApp", "onCreateLoader");
-//                return new CursorLoader(getActivity(),
-//                        LocationsProvider.URI_LOCATIONS, Locations.FIELDS, null, null,
-//                        null);
-//            }
-//
-//            @Override
-//            public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
-//                Log.d("TheWeatherApp", "onLoaderFinished");
+//        Load the content
+        getLoaderManager().initLoader(0, null, new LoaderCallbacks<Cursor>() {
+            @Override
+            public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+                Log.d("TheWeatherApp", "onCreateLoader");
+                return new CursorLoader(getActivity(),
+                        LocationsProvider.URI_LOCATIONS, Locations.FIELDS, null, null,
+                        null);
+            }
+
+            @Override
+            public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
+                Log.d("TheWeatherApp", "onLoaderFinished");
 //                mAdapter.swapCursor(c);
-//            }
-//
-//            @Override
-//            public void onLoaderReset(Loader<Cursor> arg0) {
-//                Log.d("TheWeatherApp", "onLoaderReset");
+                if(should_update) {
+//                    mItems = LocationDBHandler.getInstance(getActivity()).getLocations();
+                    mItems.clear();
+                    c.moveToFirst();
+                    for(int i = 0 ; i < c.getCount() ; i++) {
+                        mItems.add(new Locations(c));
+                        c.moveToNext();
+                    }
+
+                    mAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onLoaderReset(Loader<Cursor> arg0) {
+                Log.d("TheWeatherApp", "onLoaderReset");
+                if(should_update) {
+                    mAdapter.notifyDataSetChanged();
+                }
 //                mAdapter.swapCursor(null);
-//            }
-//        });
+            }
+        });
 
         mRecyclerView.setAdapter(mAdapter);
 
@@ -197,6 +209,7 @@ public class LocationListFragment extends Fragment {
                                     mLayoutManager.removeView(mLayoutManager.getChildAt(position));
                                     mItems.remove(position);
                                     mAdapter.notifyItemRemoved(position);
+                                    should_update = false;
                                     LocationDBHandler.getInstance(getActivity()).removeLocation(mItems.get(position));
 
                                 }
