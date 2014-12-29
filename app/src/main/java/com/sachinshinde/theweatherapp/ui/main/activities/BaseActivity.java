@@ -29,18 +29,18 @@ import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.animation.TypeEvaluator;
 import com.nineoldandroids.animation.ValueAnimator;
 import com.sachinshinde.theweatherapp.R;
-import com.sachinshinde.theweatherapp.activities.AboutClass;
-import com.sachinshinde.theweatherapp.ui.widget.MultiSwipeRefreshLayout;
-import com.sachinshinde.theweatherapp.ui.widget.ScrimInsetsScrollView;
-import com.sachinshinde.theweatherapp.util.LUtils;
-import com.sachinshinde.theweatherapp.util.PrefUtils;
-import com.sachinshinde.theweatherapp.util.UIUtils;
+import com.sachinshinde.theweatherapp.ui.main.activities.AboutClass;
+import com.sachinshinde.theweatherapp.ui.main.views.MultiSwipeRefreshLayout;
+import com.sachinshinde.theweatherapp.ui.main.views.ScrimInsetsScrollView;
+import com.sachinshinde.theweatherapp.utils.LUtils;
+import com.sachinshinde.theweatherapp.utils.PrefUtils;
+import com.sachinshinde.theweatherapp.utils.UIUtils;
 
 import java.util.ArrayList;
 
-import static com.sachinshinde.theweatherapp.util.LogUtils.LOGD;
-import static com.sachinshinde.theweatherapp.util.LogUtils.LOGW;
-import static com.sachinshinde.theweatherapp.util.LogUtils.makeLogTag;
+import static com.sachinshinde.theweatherapp.utils.LogUtils.LOGD;
+import static com.sachinshinde.theweatherapp.utils.LogUtils.LOGW;
+import static com.sachinshinde.theweatherapp.utils.LogUtils.makeLogTag;
 
 /**
  * Created by sachin on 28/10/14.

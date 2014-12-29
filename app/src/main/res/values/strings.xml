@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <string name="app_name">The Weather App</string>
     <string name="hello_world">Hello world!</string>
@@ -39,5 +39,12 @@
 
     <!-- Menu item to start the Sign In flow [CHAR_LIMIT=20] -->
     <string name="navdrawer_item_morebydev">More By Dev</string>
+
+
+    <string name="changelog_version_format">Version <xliff:g id="version_name">%s</xliff:g></string>
+    <string name="undo">Undo</string>
+    <string name="undoall">Undo All</string>
+    <string name="title_activity_suggest">Add Location</string>
+    <string name="error">Error while searching, Try again!!</string>
 
 </resources>
