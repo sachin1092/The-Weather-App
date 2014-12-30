@@ -71,7 +71,7 @@
 
     <style name="Theme.TheWeatherApp.Welcome" parent="Theme.TheWeatherApp" />
 
-    <style name="Theme.TheWeatherApp.Sessions" parent="Theme.TheWeatherApp.WithNavDrawer">
+    <style name="Theme.TheWeatherApp.Locations" parent="Theme.TheWeatherApp.WithNavDrawer">
         <item name="actionBarInsetStart">@dimen/keyline_2_minus_16dp</item>
         <item name="spinnerBarInsetStart">@dimen/keyline_2_minus_16dp</item>
         <item name="android:windowBackground">@color/gray_background</item>

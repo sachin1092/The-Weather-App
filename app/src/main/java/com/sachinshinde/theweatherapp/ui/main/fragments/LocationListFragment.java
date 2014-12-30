@@ -199,7 +199,7 @@ public class LocationListFragment extends Fragment {
 
             @Override
             public CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-                View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.location_listitem
+                View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_item_location
                         , viewGroup, false);
                 return new CustomViewHolder(view);
             }
@@ -207,10 +207,10 @@ public class LocationListFragment extends Fragment {
             @Override
             public void onBindViewHolder(CustomViewHolder viewHolder, int position) {
                 viewHolder.location_name.setText(mItems.get(position).city_name);
-                viewHolder.is_my_loc.setText(mItems.get(position).is_my_loc);
-                viewHolder.gmt.setText(mItems.get(position).gmt);
-                viewHolder.lat.setText(mItems.get(position).lat);
-                viewHolder.lon.setText(mItems.get(position).lon);
+//                viewHolder.is_my_loc.setText(mItems.get(position).is_my_loc);
+//                viewHolder.gmt.setText(mItems.get(position).gmt);
+//                viewHolder.lat.setText(mItems.get(position).lat);
+//                viewHolder.lon.setText(mItems.get(position).lon);
             }
 
             @Override
@@ -472,10 +472,10 @@ public class LocationListFragment extends Fragment {
         public CustomViewHolder(View itemView) {
             super(itemView);
             this.location_name = (TextView) itemView.findViewById(R.id.cardLocationName);
-            this.is_my_loc = (TextView) itemView.findViewById(R.id.cardIsMyLocation);
-            this.gmt = (TextView) itemView.findViewById(R.id.cardGMT);
-            this.lat = (TextView) itemView.findViewById(R.id.cardLat);
-            this.lon = (TextView) itemView.findViewById(R.id.cardLon);
+//            this.is_my_loc = (TextView) itemView.findViewById(R.id.cardIsMyLocation);
+//            this.gmt = (TextView) itemView.findViewById(R.id.cardGMT);
+//            this.lat = (TextView) itemView.findViewById(R.id.cardLat);
+//            this.lon = (TextView) itemView.findViewById(R.id.cardLon);
         }
     }
 
