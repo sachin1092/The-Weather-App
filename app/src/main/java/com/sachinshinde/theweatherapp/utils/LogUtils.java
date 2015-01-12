@@ -47,6 +47,14 @@ public class LogUtils {
             Log.d(tag, message);
 //        }
     }
+    
+    public static void d(Object ...msg) {
+        String message = "";
+        for(Object m : msg) {
+            message += m.toString();
+        }
+        Log.d("TheWeatherApp", message);
+    }
 
     public static void LOGD(final String tag, String message, Throwable cause) {
         //noinspection PointlessBooleanExpression,ConstantConditions
