@@ -53,7 +53,7 @@ public class LogUtils {
         for(Object m : msg) {
             message += m.toString();
         }
-        Log.d("TheWeatherApp", message);
+        Log.d(LOG_PREFIX, message);
     }
 
     public static void LOGD(final String tag, String message, Throwable cause) {
