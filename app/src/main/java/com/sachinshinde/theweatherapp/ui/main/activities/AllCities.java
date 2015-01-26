@@ -42,11 +42,6 @@ public class AllCities extends BaseActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_all_cities);
-
-//        Toolbar toolbar = getActionBarToolbar();
-
-//        overridePendingTransition(0, 0);
 
     }
 

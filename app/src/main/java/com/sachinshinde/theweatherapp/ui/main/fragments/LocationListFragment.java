@@ -38,6 +38,7 @@ import com.sachinshinde.theweatherapp.db.LocationDBHandler;
 import com.sachinshinde.theweatherapp.db.Locations;
 import com.sachinshinde.theweatherapp.db.LocationsProvider;
 import com.sachinshinde.theweatherapp.libs.SwipeDismissRecyclerViewTouchListener;
+import com.sachinshinde.theweatherapp.ui.main.activities.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -151,6 +152,7 @@ public class LocationListFragment extends Fragment {
 //						R.id.cardIsMyLocation, R.id.cardGMT, R.id.cardLat, R.id.cardLon}, 0));
 
 
+
 	}
 
     @Override
@@ -188,6 +190,11 @@ public class LocationListFragment extends Fragment {
             }
         });
         mRecyclerView = (RecyclerView)root.findViewById(R.id.rvMain);
+
+        if(mRecyclerView != null){
+            ((BaseActivity)getActivity()).enableActionBarAutoHide(mRecyclerView);
+        }
+
         mLayoutManager = new GridLayoutManager(getActivity(), 2);
         mRecyclerView.setLayoutManager(mLayoutManager);
 

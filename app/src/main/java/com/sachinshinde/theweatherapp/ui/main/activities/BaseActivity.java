@@ -13,6 +13,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
@@ -641,24 +642,34 @@ public abstract class BaseActivity extends ActionBarActivity implements
         onActionBarAutoShowOrHide(show);
     }
 
-    protected void enableActionBarAutoHide(final AbsListView listView) {
+    public void enableActionBarAutoHide(final RecyclerView recyclerView) {
         initActionBarAutoHide();
-        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             final static int ITEMS_THRESHOLD = 3;
             int lastFvi = 0;
 
             @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            public void onScrollStateChanged(RecyclerView view, int scrollState) {
             }
 
             @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
                 onMainContentScrolled(firstVisibleItem <= ITEMS_THRESHOLD ? 0 : Integer.MAX_VALUE,
                         lastFvi - firstVisibleItem > 0 ? Integer.MIN_VALUE :
                                 lastFvi == firstVisibleItem ? 0 : Integer.MAX_VALUE
                 );
                 lastFvi = firstVisibleItem;
             }
+
+//            @Override
+//            public void onScroll(RecyclerView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//                onMainContentScrolled(firstVisibleItem <= ITEMS_THRESHOLD ? 0 : Integer.MAX_VALUE,
+//                        lastFvi - firstVisibleItem > 0 ? Integer.MIN_VALUE :
+//                                lastFvi == firstVisibleItem ? 0 : Integer.MAX_VALUE
+//                );
+//                lastFvi = firstVisibleItem;
+//            }
         });
     }
 
