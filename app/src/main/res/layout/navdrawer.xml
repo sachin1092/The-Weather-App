@@ -9,9 +9,53 @@
     android:fitsSystemWindows="true"
     app:insetForeground="#4000">
 
-    <LinearLayout android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@+id/chosen_account_view"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:foreground="?photoItemForeground">
+
+            <ImageView
+                android:id="@+id/profile_cover_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/main_back"
+                android:tint="@color/session_photo_scrim" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="5dp"
+                    android:src="@drawable/ic_launcher"/>
+
+                <TextView
+                    android:id="@+id/profile_name_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:text="The Weather App"
+                    android:textColor="@color/body_text_1_inverse"
+                    android:textSize="@dimen/text_size_large" />
+
+            </LinearLayout>
+
+        </FrameLayout>
 
 
 

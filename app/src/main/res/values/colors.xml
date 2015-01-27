@@ -49,7 +49,7 @@
     <color name="data_item_lightbg_body_text">#707070</color>
     <color name="data_item_lightbg_dim_text">#e0e0e0</color>
 
-    <color name="session_photo_scrim">#6000</color>
+    <color name="session_photo_scrim">#d7303f9f</color>
 
     <color name="default_session_color">@color/theme_primary</color>
     <color name="no_track_branding_session_tile_overlay">#8333</color>
