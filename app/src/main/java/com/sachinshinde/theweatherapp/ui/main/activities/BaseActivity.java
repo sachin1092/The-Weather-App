@@ -655,6 +655,7 @@ public abstract class BaseActivity extends ActionBarActivity implements
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 //                super.onScrolled(recyclerView, dx, dy);
+                int firstVisibleItem = recyclerView.getScrollY();
                 onMainContentScrolled(firstVisibleItem <= ITEMS_THRESHOLD ? 0 : Integer.MAX_VALUE,
                         lastFvi - firstVisibleItem > 0 ? Integer.MIN_VALUE :
                                 lastFvi == firstVisibleItem ? 0 : Integer.MAX_VALUE
