@@ -206,7 +206,7 @@ public class LocationListFragment extends Fragment {
 
             @Override
             public CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-                View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_item_location
+                View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.location_listitem
                         , viewGroup, false);
                 return new CustomViewHolder(view);
             }
