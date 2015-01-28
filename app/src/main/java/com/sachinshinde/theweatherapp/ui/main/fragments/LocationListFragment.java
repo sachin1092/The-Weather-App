@@ -557,7 +557,7 @@ public class LocationListFragment extends Fragment {
 //			getListView().setItemChecked(mActivatedPosition, false);
 //		} else {
 //			getListView().setItemChecked(position, true);
-//		}
+//		}g
 
 		mActivatedPosition = position;
 	}
