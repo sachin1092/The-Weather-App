@@ -17,7 +17,7 @@
         <FrameLayout
             android:id="@+id/chosen_account_view"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="50dp"
             android:foreground="?photoItemForeground">
 
             <ImageView
@@ -36,9 +36,9 @@
                 android:layout_height="match_parent">
 
                 <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_marginLeft="5dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="5dp"
                     android:src="@drawable/ic_launcher"/>
 
                 <TextView
@@ -46,12 +46,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
-                    android:gravity="center"
+                    android:gravity="start"
                     android:maxLines="1"
                     android:singleLine="true"
                     android:text="The Weather App"
                     android:textColor="@color/body_text_1_inverse"
-                    android:textSize="@dimen/text_size_large" />
+                    android:textSize="@dimen/text_size_medium" />
 
             </LinearLayout>
 
