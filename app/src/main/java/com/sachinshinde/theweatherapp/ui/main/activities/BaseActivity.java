@@ -69,7 +69,6 @@ public abstract class BaseActivity extends ActionBarActivity implements
 
     // Durations for certain animations we use:
     private static final int HEADER_HIDE_ANIM_DURATION = 300;
-    private static final int ACCOUNT_BOX_EXPAND_ANIM_DURATION = 200;
 
     // symbols for navdrawer items (indices must correspond to array below). This is
     // not a list of items that are necessarily *present* in the Nav Drawer; rather,
@@ -167,12 +166,6 @@ public abstract class BaseActivity extends ActionBarActivity implements
         if (ab != null) {
             ab.setDisplayHomeAsUpEnabled(true);
         }
-
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
-//        if (toolbar != null) {
-//            setSupportActionBar(toolbar);
-//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        }
 
         mLUtils = LUtils.getInstance(this);
         mThemedStatusBarColor = getResources().getColor(R.color.theme_primary_dark);

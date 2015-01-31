@@ -547,9 +547,9 @@ public class LocationListFragment extends Fragment {
 	public void setActivateOnItemClick(boolean activateOnItemClick) {
 		// When setting CHOICE_MODE_SINGLE, ListView will automatically
 		// give items the 'activated' state when touched.
-		mRecyclerView.setChoiceMode(
-				activateOnItemClick ? ListView.CHOICE_MODE_SINGLE
-						: ListView.CHOICE_MODE_NONE);
+//		mRecyclerView.setChoiceMode(
+//				activateOnItemClick ? ListView.CHOICE_MODE_SINGLE
+//						: ListView.CHOICE_MODE_NONE);
 	}
 //
 	private void setActivatedPosition(int position) {
@@ -622,7 +622,7 @@ public class LocationListFragment extends Fragment {
     public void animateReload() {
         //int curTop = mCollectionView.getTop();
         mRecyclerView.setAlpha(0);
-        //mCollectionView.setTop(getResources().getDimensionPixelSize(R.dimen.browse_sessions_anim_amount));
+//        mCollectionView.setTop(getResources().getDimensionPixelSize(R.dimen.browse_sessions_anim_amount));
         //mCollectionView.animate().y(curTop).alpha(1).setDuration(ANIM_DURATION).setInterpolator(new DecelerateInterpolator());
         mRecyclerView.animate().alpha(1).setDuration(ANIM_DURATION).setInterpolator(new DecelerateInterpolator());
     }
