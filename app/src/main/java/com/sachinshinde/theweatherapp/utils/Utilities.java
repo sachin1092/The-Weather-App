@@ -27,7 +27,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
@@ -174,7 +173,7 @@ public class Utilities {
 	 * @return
 	 */
 
-	public static int ReturnHeight(int i, Context mContext) {
+	public static int dpToPx(int i, Context mContext) {
 
 		DisplayMetrics displayMetrics = mContext.getResources()
 				.getDisplayMetrics();
@@ -239,8 +238,8 @@ public class Utilities {
 
 	public static Drawable generatePatternBitmap(Context mContext) {
 
-		int width = ReturnHeight(50, mContext);
-		int height = ReturnHeight(50, mContext);
+		int width = dpToPx(50, mContext);
+		int height = dpToPx(50, mContext);
 
 		Bitmap mBitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
 		Canvas canvas = new Canvas(mBitmap);
@@ -291,8 +290,8 @@ public class Utilities {
 	 */
 	public static Bitmap RetBitCol(int color, Context mContext) {
 
-		Bitmap mBitmap = Bitmap.createBitmap(ReturnHeight(50, mContext),
-				ReturnHeight(50, mContext), Config.ARGB_8888);
+		Bitmap mBitmap = Bitmap.createBitmap(dpToPx(50, mContext),
+				dpToPx(50, mContext), Config.ARGB_8888);
 		Canvas c = new Canvas(mBitmap);
 		c.drawColor(color);
 		return mBitmap;
