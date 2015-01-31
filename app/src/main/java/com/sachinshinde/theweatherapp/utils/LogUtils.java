@@ -26,13 +26,13 @@ public class LogUtils {
     }
 
     public static void LOGD(final String tag, String message) {
-        //noinspection PointlessBooleanExpression,ConstantConditions
-//        if (DEBUG || Log.isLoggable(tag, Log.DEBUG)) {
+        if (DEBUG)
             Log.d(tag, message);
-//        }
     }
     
     public static void d(Object ...msg) {
+        if (!DEBUG)
+            return;
         String message = "";
         for(Object m : msg) {
             message += m.toString();
@@ -41,24 +41,18 @@ public class LogUtils {
     }
 
     public static void LOGD(final String tag, String message, Throwable cause) {
-        //noinspection PointlessBooleanExpression,ConstantConditions
-//        if (DEBUG || Log.isLoggable(tag, Log.DEBUG)) {
+        if (DEBUG)
             Log.d(tag, message, cause);
-//        }
     }
 
     public static void LOGV(final String tag, String message) {
-        //noinspection PointlessBooleanExpression,ConstantConditions
-//        if (DEBUG && Log.isLoggable(tag, Log.VERBOSE)) {
+        if (DEBUG)
             Log.v(tag, message);
-//        }
     }
 
     public static void LOGV(final String tag, String message, Throwable cause) {
-        //noinspection PointlessBooleanExpression,ConstantConditions
-//        if (DEBUG && Log.isLoggable(tag, Log.VERBOSE)) {
+        if (DEBUG)
             Log.v(tag, message, cause);
-//        }
     }
 
     public static void LOGI(final String tag, String message) {
@@ -88,3 +82,4 @@ public class LogUtils {
     private LogUtils() {
     }
 }
+g
