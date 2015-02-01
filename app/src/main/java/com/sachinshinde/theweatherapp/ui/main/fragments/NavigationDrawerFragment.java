@@ -243,19 +243,19 @@ public class NavigationDrawerFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        if (mDrawerToggle.onOptionsItemSelected(item)) {
+//            return true;
+//        }
 
 //        if (item.getItemId() == R.id.action_example) {
 //            Toast.makeText(getActivity(), "Example action.", Toast.LENGTH_SHORT).show();
 //            return true;
 //        }
 
-        return super.onOptionsItemSelected(item);
-    }
+//        return super.onOptionsItemSelected(item);
+//    }
 
     /**
      * Per the navigation drawer design guidelines, updates the action bar to show the global app

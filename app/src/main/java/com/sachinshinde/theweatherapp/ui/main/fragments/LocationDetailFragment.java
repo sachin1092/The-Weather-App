@@ -106,15 +106,15 @@ public class LocationDetailFragment extends Fragment {
 //        updateLocationFromUI();
         }
 //
-//    private void updateLocationFromUI() {
-//        if (mItem != null) {
-//            mItem.city_name = textLocationName.getText().toString();
-//            mItem.is_my_loc = textIsMyLoc.getText().toString();
-//            mItem.gmt = textGMT.getText().toString();
-//            mItem.lat = textLatitude.getText().toString();
-//            mItem.lon = textLongitude.getText().toString();
-//
-//            LocationDBHandler.getInstance(getActivity()).putLocation(mItem);
-//        }
-//    }
+    private void updateLocationFromUI() {
+        if (mItem != null) {
+            mItem.city_name = textLocationName.getText().toString();
+            mItem.is_my_loc = textIsMyLoc.getText().toString();
+            mItem.gmt = textGMT.getText().toString();
+            mItem.lat = textLatitude.getText().toString();
+            mItem.lon = textLongitude.getText().toString();
+
+            LocationDBHandler.getInstance(getActivity()).putLocation(mItem);
+        }
+    }
 }
