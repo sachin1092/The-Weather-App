@@ -19,24 +19,9 @@ public class AllCities extends BaseActivity implements
      */
     @Override
     public void onItemSelected(long id) {
-//		if (mTwoPane) {
-//			// In two-pane mode, show the detail view in this activity by
-//			// adding or replacing the detail fragment using a
-//			// fragment transaction.
-//			Bundle arguments = new Bundle();
-//			arguments.putLong(LocationDetailFragment.ARG_ITEM_ID, id);
-//			LocationDetailFragment fragment = new LocationDetailFragment();
-//			fragment.setArguments(arguments);
-//			getSupportFragmentManager().beginTransaction()
-//					.replace(R.id.person_detail_container, fragment).commit();
-//
-//		} else {
-        // In single-pane mode, simply start the detail activity
-        // for the selected item ID.
         Intent detailIntent = new Intent(this, LocationDetailActivity.class);
         detailIntent.putExtra(LocationDetailFragment.ARG_ITEM_ID, id);
         startActivity(detailIntent);
-//		}
     }
 
     @Override
@@ -48,14 +33,6 @@ public class AllCities extends BaseActivity implements
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-//        CollectionView collectionView = (CollectionView) findViewById(R.id.sessions_collection_view);
-//
-//        if (collectionView != null) {
-//            Log.d(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", "not null");
-//            enableActionBarAutoHide(collectionView);
-//        } else {
-//            Log.d(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", "null");
-//        }
 
 
         mLocationsFrag = (LocationListFragment) getSupportFragmentManager().findFragmentById(
