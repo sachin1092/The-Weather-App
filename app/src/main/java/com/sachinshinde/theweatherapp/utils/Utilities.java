@@ -558,26 +558,6 @@ public class Utilities {
 		return build.toString();
 	}
 
-	/** Verifies the developer payload of a purchase. *//*
-	public static boolean verifyDeveloperPayload(Purchase p, Context mContext) {
-		String payload = p.getDeveloperPayload();
-
-		String[] arr = getAccountNames(mContext);
-
-		boolean isPayloadcorrect = false;
-
-		for (int i = 0; i < arr.length; i++) {
-			if (payload.contains(arr[i]))
-				isPayloadcorrect = true;
-		}
-
-		// new Logger(getBaseContext()).Toast("Requested Payload was: "
-		// + generatePayLoad() + " receieved payload is: " + payload
-		// + " returning " + isPayloadcorrect);
-
-		return isPayloadcorrect;
-	}*/
-
 	public static String[] getAccountNames(Context mContext) {
 		AccountManager mAccountManager = AccountManager.get(mContext);
 		Account[] accounts = mAccountManager.getAccountsByType("com.google");

@@ -71,18 +71,6 @@ public class UIUtils {
     private static final float SESSION_PHOTO_SCRIM_ALPHA = 0.25f; // 0=invisible, 1=visible image
     private static final float SESSION_PHOTO_SCRIM_SATURATION = 0.2f; // 0=gray, 1=color image
 
-    public static final String TARGET_FORM_FACTOR_ACTIVITY_METADATA =
-            "com.google.samples.apps.theweatherapp.meta.TARGET_FORM_FACTOR";
-
-    public static final String TARGET_FORM_FACTOR_HANDSET = "handset";
-    public static final String TARGET_FORM_FACTOR_TABLET = "tablet";
-
-    /**
-     * Flags used with {@link android.text.format.DateUtils#formatDateRange}.
-     */
-    private static final int TIME_FLAGS = DateUtils.FORMAT_SHOW_TIME
-            | DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_ABBREV_WEEKDAY;
-
     /**
      * Regex to search for HTML escape sequences.
      *
@@ -90,22 +78,6 @@ public class UIUtils {
      * semicolon. (Example: &amp;amp;)
      */
     private static final Pattern REGEX_HTML_ESCAPE = Pattern.compile(".*&\\S;.*");
-
-    private static CharSequence sNowPlayingText;
-    private static CharSequence sLivestreamNowText;
-    private static CharSequence sLivestreamAvailableText;
-
-    public static final String GOOGLE_PLUS_PACKAGE_NAME = "com.google.android.apps.plus";
-    public static final String YOUTUBE_PACKAGE_NAME = "com.google.android.youtube";
-
-    public static final int ANIMATION_FADE_IN_TIME = 250;
-    public static final String TRACK_ICONS_TAG = "tracks";
-
-    private static SimpleDateFormat sDayOfWeekFormat = new SimpleDateFormat("E");
-    private static DateFormat sShortTimeFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
-
-
-
 
 
     /**
@@ -353,7 +325,6 @@ public class UIUtils {
         setListeners(img3, anim3, anim1, ANIMATION_DURATION);
         anim1.start();
         builder.setView(view);
-//        builder.setCancelable(false);
         AlertDialog ad = builder.create();
         ad.setCanceledOnTouchOutside(false);
         try {
