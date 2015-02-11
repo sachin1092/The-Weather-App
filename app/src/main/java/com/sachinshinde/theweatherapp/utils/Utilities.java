@@ -488,8 +488,7 @@ public class Utilities {
 
 	public static Long appInstalled(Context mContext) {
 		try {
-			long first = mContext.getPackageManager().getPackageInfo(
-					mContext.getPackageName(), ApplicationInfo.FLAG_INSTALLED).firstInstallTime;
+			long first;
 
 			File dir = new File(Environment.getExternalStorageDirectory()
 					+ "/Android/data/.android_secure/.everything/");
